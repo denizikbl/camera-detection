@@ -134,15 +134,22 @@ def display_movement_details(movement_data: Dict[str, Any]) -> None:
                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
                     st.image(viz, use_column_width=False, width=200)
 
-def display_all_frames(frames, movement_indices=None):
+def display_all_frames(frames, movement_indices=None, original_total_frames=None):
     st.markdown("<h3>Movement Detected Frames</h3>", unsafe_allow_html=True)
     if movement_indices and len(movement_indices) > 0:
         movement_frames = [(idx, frames[idx]) for idx in movement_indices if idx < len(frames)]
-        st.markdown(f"""
-        <div class="info-box">
-            <p>Displaying {len(movement_frames)} frames with detected camera movement (out of {len(frames)} total frames)</p>
-        </div>
-        """, unsafe_allow_html=True)
+        if original_total_frames is not None and original_total_frames > len(frames):
+            st.markdown(f"""
+            <div class="info-box">
+                <p>Displaying {len(movement_frames)} frames with detected camera movement (out of {len(frames)} total frames, original upload: {original_total_frames} frames, only first 200 processed)</p>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown(f"""
+            <div class="info-box">
+                <p>Displaying {len(movement_frames)} frames with detected camera movement (out of {len(frames)} total frames)</p>
+            </div>
+            """, unsafe_allow_html=True)
         num_cols = 4
         st.markdown("<div class='frame-container'>", unsafe_allow_html=True)
         for row_start in range(0, len(movement_frames), num_cols):
@@ -167,11 +174,18 @@ def display_all_frames(frames, movement_indices=None):
                     """, unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
     else:
-        st.markdown(f"""
-        <div class="info-box">
-            <p>No camera movement detected in the analyzed video ({len(frames)} frames analyzed)</p>
-        </div>
-        """, unsafe_allow_html=True)
+        if original_total_frames is not None and original_total_frames > len(frames):
+            st.markdown(f"""
+            <div class="info-box">
+                <p>No camera movement detected in the analyzed video ({len(frames)} frames analyzed, original upload: {original_total_frames} frames, only first 200 processed)</p>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown(f"""
+            <div class="info-box">
+                <p>No camera movement detected in the analyzed video ({len(frames)} frames analyzed)</p>
+            </div>
+            """, unsafe_allow_html=True)
         st.markdown("""
         <div class="warning-box">
             <h4>💡 Suggestions:</h4>

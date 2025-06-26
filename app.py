@@ -104,6 +104,7 @@ def main():
                     frame = frame[:, :, :3]
                 frames.append(frame)
             # Maksimum 200 frame ile sınırla
+            original_total_frames = len(frames)
             if len(frames) > 200:
                 frames = frames[:200]
                 st.warning("Maximum 200 frame işlenebilir. Fazlası otomatik olarak atlandı.")
@@ -140,7 +141,7 @@ def main():
                     
                     with result_tabs[1]:
                         # Display all frames with movement indicators
-                        display_all_frames(frames, result['movement_indices'])
+                        display_all_frames(frames, result['movement_indices'], original_total_frames=original_total_frames)
     
     with tab2:
         st.markdown("<h3>Video Analysis</h3>", unsafe_allow_html=True)
@@ -279,7 +280,7 @@ def main():
                 
                 with result_tabs[1]:
                     # Display all frames with movement indicators
-                    display_all_frames(results['all_frames'], results['original_movement_indices'])
+                    display_all_frames(results['all_frames'], results['original_movement_indices'], original_total_frames=total_frames)
                 
                 # Add a button to clear results and start over
                 if st.button("🔄 Analyze New Video", type="secondary"):
