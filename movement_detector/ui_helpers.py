@@ -15,16 +15,17 @@ def plot_movement_scores(movement_data: Dict[str, Any]) -> plt.Figure:
     ax.plot(frames, scores, color='#1e3d59', linewidth=2, alpha=0.7)
     ax.fill_between(frames, scores, color='#1e3d59', alpha=0.1)
     movement_indices = movement_data['movement_indices']
-    if movement_indices:
-        movement_scores = [scores[i] if i < len(scores) else 0 for i in movement_indices]
-        ax.scatter(movement_indices, movement_scores, color='#ff6e40', s=100, zorder=5, \
+    valid_indices = [i for i in movement_indices if i < len(scores)]
+    if valid_indices:
+        movement_scores = [scores[i] for i in valid_indices]
+        ax.scatter(valid_indices, movement_scores, color='#ff6e40', s=100, zorder=5, \
                   label='Movement Detected', edgecolor='white', linewidth=1.5)
     ax.set_xlabel('Frame Number', fontsize=12, fontweight='bold')
     ax.set_ylabel('Movement Score', fontsize=12, fontweight='bold')
     ax.set_title('Camera Movement Detection Analysis', fontsize=16, fontweight='bold', pad=20)
     ax.grid(True, alpha=0.3, linestyle='--')
-    if movement_indices and len(scores) > 0:
-        threshold = min([scores[i] for i in movement_indices]) if movement_indices else 0
+    if valid_indices and len(scores) > 0:
+        threshold = min([scores[i] for i in valid_indices])
         ax.axhline(y=threshold, color='#ff6e40', linestyle='--', alpha=0.7, \
                   label=f'Threshold: {threshold:.2f}')
     ax.legend(loc='upper right', frameon=True, facecolor='white')
