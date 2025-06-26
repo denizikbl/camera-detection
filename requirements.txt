@@ -1,5 +1,5 @@
 streamlit
-opencv-python-headless
+opencv-headless
 numpy
 Pillow
 plotly
