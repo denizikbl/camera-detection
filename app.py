@@ -103,7 +103,10 @@ def main():
                 if len(frame.shape) == 3 and frame.shape[-1] == 4:  # RGBA to RGB
                     frame = frame[:, :, :3]
                 frames.append(frame)
-            
+            # Maksimum 200 frame ile sınırla
+            if len(frames) > 200:
+                frames = frames[:200]
+                st.warning("Maximum 200 frame işlenebilir. Fazlası otomatik olarak atlandı.")
             st.markdown(get_info_box_html(f"Successfully loaded {len(frames)} frames."), unsafe_allow_html=True)
             
             col1, col2, col3 = st.columns([1, 2, 1])
@@ -203,19 +206,18 @@ def main():
                         ret, frame = cap.read()
                         if not ret:
                             break
-                        
+                        # Maksimum 200 frame ile sınırla
+                        if frame_count >= 200:
+                            break
                         # Update progress bar
                         progress = min(100, int((frame_count / total_frames) * 50))  # 50% for frame extraction
                         progress_bar.progress(progress)
                         status_text.text(f"Extracting frames... ({frame_count}/{total_frames})")
-                        
                         # Store all frames for display
                         all_frames.append(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-                        
                         # Only use every Nth frame for analysis
                         if frame_count % sample_rate == 0:
                             frames_for_analysis.append(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-                        
                         frame_count += 1
                     
                     cap.release()
