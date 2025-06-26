@@ -1,7 +1,5 @@
-streamlit
-opencv-headless
-numpy
-Pillow
-plotly
-pandas
-matplotlib
+opencv-python-headless>=4.7.0.68
+streamlit>=1.22.0
+numpy>=1.24.0
+Pillow>=9.5.0
+matplotlib>=3.7.0
